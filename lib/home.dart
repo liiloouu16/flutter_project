@@ -19,16 +19,19 @@ class Home extends ConsumerWidget {
     double height = state.heightCm;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 300,
-        title: const Text('Home',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            )),
-        backgroundColor: Colors.red,
-      ),
+      appBar:
+          PreferredSize(preferredSize: Size.fromHeight(205.0), child:
+            AppBar(
+              centerTitle: true,
+              title: const Text('🎬Filmania',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold,
+                  )),
+              backgroundColor: Colors.purple[800],
+            ),
+          ),
       body: Column(children: [
         TextField(
           decoration: InputDecoration(

@@ -32,7 +32,7 @@ class Home extends ConsumerWidget {
               backgroundColor: Colors.purple[800],
             ),
           ),
-      body: Column(children: [
+      body: Column(children:[
         TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),

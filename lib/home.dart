@@ -32,71 +32,14 @@ class Home extends ConsumerWidget {
               backgroundColor: Colors.purple[800],
             ),
           ),
-      body: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  store.decreaseWeight(store, weight, state);
-                },
-                child: Text('-5kg')),
-            Expanded(child: Text('$weight kg', textAlign: TextAlign.center)),
-            ElevatedButton(
-                onPressed: () {
-                  store.increaseWeight(store, weight, state);
-                },
-                child: Text('+5kg')),
-          ],
-        ),
-        Container(
-            height: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(store.calculImc(weight, height))),
-              color: store.modifyColor(store.calculImc(weight, height)),
-            ),
-            child: Center(
-              child: IMCVisualisator(),
-            )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  store.modifyHeight(-5, height);
-                },
-                child: Text('-5cm')),
-            Expanded(
-                child: Text(
-                  '$height cm',
-                  textAlign: TextAlign.center,
-                )),
-            ElevatedButton(
-                onPressed: () {
-                  store.modifyHeight(5, height);
-                },
-                child: Text('+5cm')),
-          ],
-        ),
+      body: Column(children:[
+        TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Rechercher ici',
+          ),
+        )
       ]),
-      floatingActionButton: store.shouldShowResetBtn(state)
-          ? Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-              onPressed: () {
-                store.resetValues(store);
-              },
-              child: Icon(Icons.clear)),
-          SizedBox(width: 16),
-          FloatingActionButton(
-            onPressed: () => null,
-            child: Icon(Icons.save),
-          )
-        ],
-      )
-          : SizedBox(),
     );
   }
 }

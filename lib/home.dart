@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_project/app_store.dart';
-import 'imc.dart';
+import 'customform.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
@@ -20,7 +20,7 @@ class Home extends ConsumerWidget {
 
     return Scaffold(
       appBar:
-          PreferredSize(preferredSize: Size.fromHeight(205.0), child:
+          PreferredSize(preferredSize: Size.fromHeight(100.0), child:
             AppBar(
               centerTitle: true,
               title: const Text('🎬Filmania',
@@ -33,12 +33,7 @@ class Home extends ConsumerWidget {
             ),
           ),
       body: Column(children:[
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Rechercher ici',
-          ),
-        )
+        MyCustomForm()
       ]),
     );
   }

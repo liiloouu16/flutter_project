@@ -12,7 +12,7 @@ class SwipeMovie extends StatefulWidget {
 class _SwipeMovieState extends State<SwipeMovie>{
 
   //liste d'images récupérées depuis l'API
-  List<String> movieImage = [];
+  List<Map<String, String>> movieImage = [];
   bool isLoading = true;
 
   //variable pour l'URL de l'API
@@ -58,7 +58,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
   }
 
   //fonction qui récupère les films
-  Future<List<String>> fetchMovies(String category) async{
+  Future<List<Map<String, String>>> fetchMovies(String category) async{
     try{
       //construction de l'url
       final String url = "https://api.themoviedb.org/3/$category?api_key=$apiKey&language=fr-FR&page=1";
@@ -73,20 +73,25 @@ class _SwipeMovieState extends State<SwipeMovie>{
 
       //sinon décode la réponse
       final dataUrl = json.decode(response.body);
+      print(dataUrl);
 
-      //accède à la liste des films
-      List<String> images = (dataUrl["results"] as List)
+      //informations des films
+      List<Map<String,String>> movies = (dataUrl["results"] as List)
         //évite erreur nulles
         .where((movie) => movie["poster_path"] != null)
-        //construction de l'url complète avec l'image du film
-        .map((movie) => "https://image.tmdb.org/t/p/original${movie["poster_path"]}")
+        .map((movie) => {
+          "image": "https://image.tmdb.org/t/p/original${movie["poster_path"]}",
+          "title":( movie["title"] ?? movie["name"] ?? "Sans titre").toString(),
+          "release_date": (movie["release_date"] ?? movie["first_air_date"]).toString(),
+          "runtime":  " ${movie["runtime"].toString()} min" ?? "Durée inconnue",
+        })
         .toList()
       ;
 
       //mélange les images aléatoirement
-      images.shuffle();
+      movies.shuffle();
 
-      return images;
+      return movies;
     }
     catch(e){
       print("Erreur lors de la récupération des films : $e");
@@ -174,18 +179,51 @@ class _SwipeMovieState extends State<SwipeMovie>{
               swipeDown: true,
               orientation: AmassOrientation.bottom,
               totalNum: movieImage.length,
-              stackNum: 2,
-              swipeEdge: 4.0,
+              stackNum: 5,
+              swipeEdge: 2.0,
               maxWidth: MediaQuery.of(context).size.width * 0.9,
               maxHeight: MediaQuery.of(context).size.height * 0.9,
               minWidth: MediaQuery.of(context).size.width * 0.8,
               minHeight: MediaQuery.of(context).size.width * 0.8,
               cardBuilder: (context, index) => Card(
-                child: Image.network(
-                  movieImage[index],
-                  fit: BoxFit.cover,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, //aligner à gauche
+                  children: [
+                    Expanded(child:
+                      Image.network(
+                        movieImage[index]["image"]!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,//éviter bord blanc
+                      ),
+                    ),
+                    //TITRE
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        movieImage[index]["title"] ?? "Titre inconnu",
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    //DATE et DUREE
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 15.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            movieImage[index]["release_date"] ?? "Date inconnue",
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          Text(
+                            movieImage[index]["runtime"] ?? "Durée inconnue",
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               cardController: controller,
               swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {},
               swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {},

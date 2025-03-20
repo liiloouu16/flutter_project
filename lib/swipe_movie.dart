@@ -236,7 +236,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     ),
                     //TITRE
                     Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 5),
                       child: Text(
                         movieDetails[index]["title"] ?? "Titre inconnu",
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

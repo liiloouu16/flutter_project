@@ -12,7 +12,7 @@ class SwipeMovie extends StatefulWidget {
 class _SwipeMovieState extends State<SwipeMovie>{
 
   //liste d'images récupérées depuis l'API
-  List<Map<String, String>> movieImage = [];
+  List<Map<String, String>> movieDetails = [];
   bool isLoading = true;
 
   //variable pour l'URL de l'API
@@ -44,9 +44,9 @@ class _SwipeMovieState extends State<SwipeMovie>{
       //récupère toutes les catégories
       final results = await Future.wait(allCategories.map(fetchMovies));
 
-      //fusionne toutes les images en liste et maj
+      //fusionne toutes les images en liste et maj et les mélange
       setState(() {
-        movieImage = results.expand((list) => list).toList()..shuffle();
+        movieDetails = results.expand((list) => list).toList()..shuffle();
         isLoading = false; //fin du chargement
       });
     } catch (e) {
@@ -76,17 +76,18 @@ class _SwipeMovieState extends State<SwipeMovie>{
       print(dataUrl);
 
       //informations des films
-      List<Map<String,String>> movies = (dataUrl["results"] as List)
-        //évite erreur nulles
-        .where((movie) => movie["poster_path"] != null)
-        .map((movie) => {
-          "image": "https://image.tmdb.org/t/p/original${movie["poster_path"]}",
-          "title":( movie["title"] ?? movie["name"] ?? "Sans titre").toString(),
-          "release_date": (movie["release_date"] ?? movie["first_air_date"]).toString(),
-          "runtime":  " ${movie["runtime"].toString()} min" ?? "Durée inconnue",
-        })
-        .toList()
-      ;
+      List<Map<String,String>> movies = await Future.wait(
+        (dataUrl["results"] as List)
+          //évite erreur nulles
+          .where((movie) => movie["poster_path"] != null)
+          .map((movie) async => {
+            "image": "https://image.tmdb.org/t/p/original${movie["poster_path"]}",
+            "title": ( movie["title"] ?? movie["name"] ?? "Sans titre").toString(),
+            "release_date": (movie["release_date"] ?? movie["first_air_date"]).toString(),
+            "runtime": await fetchRuntime(movie["id"]),
+          })
+          .toList(),
+      );
 
       //mélange les images aléatoirement
       movies.shuffle();
@@ -123,11 +124,48 @@ class _SwipeMovieState extends State<SwipeMovie>{
         }
         final newImages = await fetchMovies(category);
         setState(() {
-          movieImage = newImages;
+          movieDetails = newImages;
         });
       }
     }catch(e){
       print("Erreur lors de la mise à jour des films : $e");
+    }
+  }
+
+  //récupère la durée du film
+  Future<String> fetchRuntime (int movieId) async{
+    try {
+      //création de la requête
+      final String url = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&language=fr-FR";
+
+      //envoie de la requête GET
+      final response = await http.get(Uri.parse(url));
+
+      //si aucune réponse est retournée
+      if (response.statusCode != 200) {
+        throw Exception(
+            "Erreur ${response.statusCode} : ${response.reasonPhrase}");
+      }
+
+      //sinon décode la réponse
+      final dataUrl = json.decode(response.body);
+      int runtime =  dataUrl["runtime"] ?? 0;
+
+      if (runtime == 0) return "Durée inconnue ici";
+
+      //conversion en heure
+      int hours = runtime ~/ 60;
+      int minutes = runtime % 60;
+
+      //si la conversion est nécéssaire
+      return hours > 0
+        ? "$hours h ${minutes.toString().padLeft(2, '0')} min"
+        : "$minutes min";
+
+
+    } catch(e){
+      print("Erreur lors de la récupération des runtime : $e");
+      return "Durée inconnue";
     }
   }
 
@@ -171,14 +209,14 @@ class _SwipeMovieState extends State<SwipeMovie>{
   Widget buildMovieList(){
     return Center(
       child: isLoading ? const CircularProgressIndicator()
-      : movieImage.isEmpty? const Text("Aucun film trouvé", style: TextStyle(fontSize: 18),)
+      : movieDetails.isEmpty? const Text("Aucun film trouvé", style: TextStyle(fontSize: 18),)
           : SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: TinderSwapCard(
               swipeUp: true,
               swipeDown: true,
               orientation: AmassOrientation.bottom,
-              totalNum: movieImage.length,
+              totalNum: movieDetails.length,
               stackNum: 5,
               swipeEdge: 2.0,
               maxWidth: MediaQuery.of(context).size.width * 0.9,
@@ -191,7 +229,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
                   children: [
                     Expanded(child:
                       Image.network(
-                        movieImage[index]["image"]!,
+                        movieDetails[index]["image"]!,
                         fit: BoxFit.cover,
                         width: double.infinity,//éviter bord blanc
                       ),
@@ -200,26 +238,24 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        movieImage[index]["title"] ?? "Titre inconnu",
+                        movieDetails[index]["title"] ?? "Titre inconnu",
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    //DATE et DUREE
+                    //DATE
                     Padding(
-                      padding: const EdgeInsets.only(left: 15.0, bottom: 15.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            movieImage[index]["release_date"] ?? "Date inconnue",
-                            style: const TextStyle(fontSize: 16, color: Colors.grey),
-                          ),
-                          Text(
-                            movieImage[index]["runtime"] ?? "Durée inconnue",
-                            style: const TextStyle(fontSize: 16, color: Colors.grey),
-                          )
-                        ],
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        "Date de sortie : ${movieDetails[index]["release_date"] ?? "Date inconnue"}",
+                        style: const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ),
+                    Padding(padding: const EdgeInsets.only(left: 15.0, bottom: 10.0),
+                      child: Text(
+                        "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
+                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    )
                   ],
                 ),
               ),

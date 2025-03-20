@@ -205,65 +205,134 @@ class _SwipeMovieState extends State<SwipeMovie>{
   }
 
 
-  //affichage les films
+  //affichage
   Widget buildMovieList(){
     return Center(
+      //chargement
       child: isLoading ? const CircularProgressIndicator()
       : movieDetails.isEmpty? const Text("Aucun film trouvé", style: TextStyle(fontSize: 18),)
-          : SizedBox(
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: TinderSwapCard(
-              swipeUp: true,
-              swipeDown: true,
-              orientation: AmassOrientation.bottom,
-              totalNum: movieDetails.length,
-              stackNum: 5,
-              swipeEdge: 2.0,
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.height * 0.9,
-              minWidth: MediaQuery.of(context).size.width * 0.8,
-              minHeight: MediaQuery.of(context).size.width * 0.8,
-              cardBuilder: (context, index) => Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, //aligner à gauche
-                  children: [
-                    Expanded(child:
-                      Image.network(
-                        movieDetails[index]["image"]!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,//éviter bord blanc
-                      ),
+        //Moviecard
+        : Column(
+          children: [
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: TinderSwapCard(
+                  swipeUp: true,
+                  swipeDown: true,
+                  orientation: AmassOrientation.bottom,
+                  totalNum: movieDetails.length,
+                  stackNum: 5,
+                  swipeEdge: 2.0,
+                  maxWidth: MediaQuery.of(context).size.width * 0.9,
+                  maxHeight: MediaQuery.of(context).size.height * 0.9,
+                  minWidth: MediaQuery.of(context).size.width * 0.8,
+                  minHeight: MediaQuery.of(context).size.width * 0.8,
+                  cardBuilder: (context, index) => Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start, //aligner à gauche
+                      children: [
+                        Expanded(child:
+                          Image.network(
+                            movieDetails[index]["image"]!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,//éviter bord blanc
+                          ),
+                        ),
+                        //TITRE
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 5),
+                          child: Text(
+                            movieDetails[index]["title"] ?? "Titre inconnu",
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        //DATE
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Text(
+                            "Date de sortie : ${movieDetails[index]["release_date"] ?? "Date inconnue"}",
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        ),
+                        Padding(padding: const EdgeInsets.only(left: 15.0, bottom: 10.0),
+                          child: Text(
+                            "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        )
+                      ],
                     ),
-                    //TITRE
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 5),
-                      child: Text(
-                        movieDetails[index]["title"] ?? "Titre inconnu",
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    //DATE
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: Text(
-                        "Date de sortie : ${movieDetails[index]["release_date"] ?? "Date inconnue"}",
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    ),
-                    Padding(padding: const EdgeInsets.only(left: 15.0, bottom: 10.0),
-                      child: Text(
-                        "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                  ),
 
-              cardController: controller,
-              swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {},
-              swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {},
-          ),
+                  cardController: controller,
+                  swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {},
+                  swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {},
+              ),
+            ),
+            SizedBox(height: 20),
+            //BOUTTONS
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //RETOUR
+                IconButton(
+                  icon: const Icon(
+                    Icons.rotate_left,
+                    color: Colors.amber,
+                    size: 40,
+                  ),
+                  onPressed: (){
+                    print("retour");
+                  },
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: const BorderSide(color: Color(0xFFEAEAEA), width:1.7)
+                    )
+                  ),
+                ),
+                SizedBox(width: 20),
+                //FAVORIS
+                IconButton(
+                  icon: const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.green,
+                    size: 55,
+                  ),
+                  onPressed: (){
+                    print("mettre en favoris");
+                  },
+                  style: IconButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          side: const BorderSide(color: Color(0xFFEAEAEA), width:1.7)
+                      )
+                  ),
+                ),
+                SizedBox(width: 20),
+                //SKIP
+                IconButton(
+                  icon: const Icon(
+                    Icons.clear,
+                    color: Colors.red,
+                    size: 40,
+                  ),
+                  onPressed: (){
+                    print("passer");
+                  },
+                  style: IconButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          side: const BorderSide(color: Color(0xFFEAEAEA), width:1.7)
+                      )
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
     );
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const SearchBarWidget({super.key});
+  final TextEditingController controller;
+  final Function(String) onSearch;
+
+  const SearchBarWidget({super.key, required this.controller, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +17,11 @@ class SearchBarWidget extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       title: TextField(
+        controller: controller,
+        onChanged: onSearch,
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-          hintText: 'Search',
+          hintText: 'Rechercher...',
           hintStyle: const TextStyle(color: Colors.white),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),

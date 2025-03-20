@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_project/app_store.dart';
 import 'appconst.dart';
 
 class Film extends ConsumerWidget {
@@ -12,12 +11,6 @@ class Film extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppStoreState state = ref.watch(appStoreProvider);
-    final AppStore store = ref.read(appStoreProvider.notifier);
-
-    double weight = state.weightKg;
-    double height = state.heightCm;
-
     return Scaffold(
       appBar:
       PreferredSize(preferredSize: Size.fromHeight(85.0), child:

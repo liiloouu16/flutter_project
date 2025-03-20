@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/affichageapi.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_project/home.dart';
 import 'film.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: Film(),
-      home: SwipeMovie(),
+      home: Recherche(),
     );
   }
 }

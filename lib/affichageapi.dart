@@ -108,15 +108,18 @@ class _RechercheState extends State<Recherche> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SearchBarWidget(
-        controller: searchController,
-        onSearch: searchMovies,
-      ),
-      body: Column(
-        children: [buildMovieList()],
-      ),
-    );
+      return Column(
+        children: [
+          SearchBarWidget(
+            controller: searchController,
+            onSearch: searchMovies,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: buildMovieList(),
+          ),
+          ],
+      );
   }
 
   Widget buildMovieList() {

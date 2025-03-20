@@ -22,16 +22,16 @@ class SearchBarWidget extends StatelessWidget implements PreferredSizeWidget {
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Rechercher...',
-          hintStyle: const TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: const BorderSide(
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
           prefixIcon: const Icon(
             Icons.search,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       ),

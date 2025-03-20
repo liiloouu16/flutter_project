@@ -12,7 +12,7 @@ class SearchBarWidget extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: <Color>[Colors.blue, Colors.pink],
+            colors: <Color>[Colors.deepPurpleAccent, Colors.purpleAccent],
           ),
         ),
       ),

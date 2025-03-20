@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/film.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'home.dart';
+import 'package:flutter_project/home.dart';
+import 'film.dart';
+import 'swipe_movie.dart';
 
 void main() {
   runApp(ProviderScope(child: const MyApp()));}
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Home(),
+      //home: Film(),
+      home: SwipeMovie(),
     );
   }
 }

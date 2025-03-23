@@ -73,7 +73,6 @@ class _SwipeMovieState extends State<SwipeMovie>{
 
       //sinon décode la réponse
       final dataUrl = json.decode(response.body);
-      print(dataUrl);
 
       //informations des films
       List<Map<String,String>> movies = await Future.wait(
@@ -191,14 +190,17 @@ class _SwipeMovieState extends State<SwipeMovie>{
           ),
         ),
         //contenu en dessous de l'onglet
-        body: TabBarView(
-          physics: NeverScrollableScrollPhysics(),//enlève le défilement entre les tabs
-          children: [
-            buildMovieList(),
-            buildMovieList(),
-            buildMovieList(),
-            buildMovieList(),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.only(top:20),
+          child: TabBarView(
+            physics: NeverScrollableScrollPhysics(),//enlève le défilement entre les tabs
+            children: [
+              buildMovieList(),
+              buildMovieList(),
+              buildMovieList(),
+              buildMovieList(),
+            ],
+          ),
         ),
       ),
     );
@@ -215,14 +217,14 @@ class _SwipeMovieState extends State<SwipeMovie>{
         : Column(
           children: [
             SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: TinderSwapCard(
                   swipeUp: true,
                   swipeDown: true,
                   orientation: AmassOrientation.bottom,
                   totalNum: movieDetails.length,
                   stackNum: 5,
-                  swipeEdge: 2.0,
+                  swipeEdge: 1,
                   maxWidth: MediaQuery.of(context).size.width * 0.9,
                   maxHeight: MediaQuery.of(context).size.height * 0.9,
                   minWidth: MediaQuery.of(context).size.width * 0.8,
@@ -240,7 +242,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
                         ),
                         //TITRE
                         Padding(
-                          padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 5),
+                          padding: const EdgeInsets.only(left: 15.0, top: 7.0, bottom: 1),
                           child: Text(
                             movieDetails[index]["title"] ?? "Titre inconnu",
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -254,7 +256,8 @@ class _SwipeMovieState extends State<SwipeMovie>{
                             style: const TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                         ),
-                        Padding(padding: const EdgeInsets.only(left: 15.0, bottom: 10.0),
+                        //DUREE
+                        Padding(padding: const EdgeInsets.only(left: 15.0, bottom: 7),
                           child: Text(
                             "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
                             style: const TextStyle(fontSize: 16, color: Colors.grey),
@@ -263,10 +266,18 @@ class _SwipeMovieState extends State<SwipeMovie>{
                       ],
                     ),
                   ),
-
                   cardController: controller,
-                  swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {},
-                  swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {},
+                  swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
+                    if (align.x < 0) {
+                      print("Swiping Left");
+                    } else if (align.x > 0) {
+                      print("Swiping Right");
+                    }
+                  },
+                  swipeCompleteCallback:
+                      (CardSwipeOrientation orientation, int index) {
+                    print("Card $index swiped $orientation");
+                  },
               ),
             ),
             SizedBox(height: 20),

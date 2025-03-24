@@ -11,7 +11,7 @@ class AnimatedSplashScreenWidget extends StatelessWidget {
     return AnimatedSplashScreen(
       splash: Center(child: Lottie.asset('assets/Animation_debut.json')),
       nextScreen: SwipeMovie(),
-      splashIconSize: 100,
+      splashIconSize: 120,
       duration: 4000,
     );
   }

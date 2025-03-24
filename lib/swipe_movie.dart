@@ -13,6 +13,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
 
   //liste d'images récupérées depuis l'API
   List<Map<String, String>> movieDetails = [];
+  List<Map<String, String>> lastSwiped = [];
   bool isLoading = true;
 
   //variable pour l'URL de l'API
@@ -229,7 +230,6 @@ class _SwipeMovieState extends State<SwipeMovie>{
                   maxHeight: MediaQuery.of(context).size.height * 0.7,
                   minWidth: MediaQuery.of(context).size.width * 0.75,
                   minHeight: MediaQuery.of(context).size.height * 0.6,
-
                   cardBuilder: (context, index) => Card(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start, //aligner à gauche
@@ -268,18 +268,19 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     ),
                   ),
                   cardController: controller,
-                  swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-                    if (align.x < 0) {
-                      print("Swiping Left");
-                    } else if (align.x > 0) {
-                      print("Swiping Right");
+                  swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
+                    if (orientation == CardSwipeOrientation.left || orientation == CardSwipeOrientation.right) {
+                      setState(() {
+                        lastSwiped.clear();
+                        print("ici");
+                        print(lastSwiped);
+                        lastSwiped.add(movieDetails[index]);
+                        print("la");
+                        print(lastSwiped);
+                      });
                     }
                   },
-                  swipeCompleteCallback:
-                      (CardSwipeOrientation orientation, int index) {
-                    print("Card $index swiped $orientation");
-                  },
-              ),
+                ),
             ),
             SizedBox(height: 20),
             //BOUTTONS
@@ -294,7 +295,13 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     size: 40,
                   ),
                   onPressed: (){
-                    print("retour");
+                    if (lastSwiped.isNotEmpty) {
+                      setState(() {
+                        movieDetails.insert(0, lastSwiped.last);
+                        lastSwiped.removeLast();
+                      });
+                      controller.triggerLeft();
+                    }
                   },
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -313,7 +320,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     size: 55,
                   ),
                   onPressed: (){
-                    print("mettre en favoris");
+                    controller.triggerRight();
                   },
                   style: IconButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -332,7 +339,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
                     size: 40,
                   ),
                   onPressed: (){
-                    print("passer");
+                    controller.triggerLeft();
                   },
                   style: IconButton.styleFrom(
                       backgroundColor: Colors.white,

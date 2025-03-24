@@ -219,16 +219,17 @@ class _SwipeMovieState extends State<SwipeMovie>{
             SizedBox(
                 height: MediaQuery.of(context).size.height * 0.65,
                 child: TinderSwapCard(
-                  swipeUp: true,
-                  swipeDown: true,
-                  orientation: AmassOrientation.bottom,
+                  swipeUp: false,
+                  swipeDown: false,
+                  orientation: AmassOrientation.top,
                   totalNum: movieDetails.length,
-                  stackNum: 5,
-                  swipeEdge: 1,
-                  maxWidth: MediaQuery.of(context).size.width * 0.9,
-                  maxHeight: MediaQuery.of(context).size.height * 0.9,
-                  minWidth: MediaQuery.of(context).size.width * 0.8,
-                  minHeight: MediaQuery.of(context).size.width * 0.8,
+                  stackNum: 3,
+                  swipeEdge: 3.0,
+                  maxWidth: MediaQuery.of(context).size.width * 0.85,
+                  maxHeight: MediaQuery.of(context).size.height * 0.7,
+                  minWidth: MediaQuery.of(context).size.width * 0.75,
+                  minHeight: MediaQuery.of(context).size.height * 0.6,
+
                   cardBuilder: (context, index) => Card(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start, //aligner à gauche

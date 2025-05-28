@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.5.2
+  logger: ^2.5.0
 
 dev_dependencies:
   flutter_test:

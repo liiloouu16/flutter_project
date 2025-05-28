@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert'; //pour décoder la réponse json
 import 'package:http/http.dart' as http; //pour les requêtes http
 import 'package:scrumlab_flutter_tindercard/scrumlab_flutter_tindercard.dart';
-import 'bot_nav_bar.dart';
+import 'package:logger/logger.dart';
+
+var logger = Logger();
 
 class SwipeMovie extends StatefulWidget {
   const SwipeMovie({super.key});
@@ -51,7 +53,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
         isLoading = false; //fin du chargement
       });
     } catch (e) {
-      print("Erreur récupération films/séries : $e");
+      logger.e("Erreur récupération films/séries : $e");
       setState(() {
         isLoading = false;
       });
@@ -100,7 +102,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
 
       return movies;
     } catch (e) {
-      print("Erreur lors de la récupération des films : $e");
+      logger.e("Erreur lors de la récupération des films : $e");
       return [];
     }
   }
@@ -132,7 +134,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
         });
       }
     } catch (e) {
-      print("Erreur lors de la mise à jour des films : $e");
+      logger.e("Erreur lors de la mise à jour des films : $e");
     }
   }
 
@@ -167,7 +169,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
           ? "$hours h ${minutes.toString().padLeft(2, '0')} min"
           : "$minutes min";
     } catch (e) {
-      print("Erreur lors de la récupération des runtime : $e");
+      logger.e("Erreur lors de la récupération des runtime : $e");
       return "Durée inconnue";
     }
   }
@@ -207,7 +209,6 @@ class _SwipeMovieState extends State<SwipeMovie> {
             ],
           ),
         ),
-        bottomNavigationBar: const NavBar(selectedIndex: 2),
       ),
     );
   }
@@ -292,11 +293,11 @@ class _SwipeMovieState extends State<SwipeMovie> {
                               orientation == CardSwipeOrientation.right) {
                             setState(() {
                               lastSwiped.clear();
-                              print("ici");
-                              print(lastSwiped);
+                              logger.e("ici");
+                              logger.e(lastSwiped);
                               lastSwiped.add(movieDetails[index]);
-                              print("la");
-                              print(lastSwiped);
+                              logger.e("la");
+                              logger.e(lastSwiped);
                             });
                           }
                         },

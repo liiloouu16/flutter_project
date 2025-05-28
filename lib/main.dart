@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_project/splash_screen.dart';
+import 'bot_nav_bar.dart';
 
 void main() {
-  runApp(ProviderScope(child: const MyApp()));}
+  runApp(ProviderScope(child: const MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AnimatedSplashScreenWidget(),
+      home: const BottomNavBar(),
     );
   }
 }

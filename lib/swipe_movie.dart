@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert'; //pour décoder la réponse json
 import 'package:http/http.dart' as http; //pour les requêtes http
 import 'package:scrumlab_flutter_tindercard/scrumlab_flutter_tindercard.dart';
+import 'botNavBar.dart';
 
 class SwipeMovie extends StatefulWidget {
   const SwipeMovie({super.key});
@@ -203,6 +204,7 @@ class _SwipeMovieState extends State<SwipeMovie>{
             ],
           ),
         ),
+        bottomNavigationBar: const NavBar(selectedIndex: 2),
       ),
     );
   }

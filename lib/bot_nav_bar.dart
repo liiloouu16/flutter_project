@@ -44,9 +44,11 @@ class _NavBarState extends State<NavBar> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.movie_creation_outlined), label: 'Movies'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.movie_creation_outlined), label: 'Movies'),
         BottomNavigationBarItem(icon: Icon(Icons.swipe), label: 'Swipe'),
-        BottomNavigationBarItem(icon: Icon(Icons.question_mark_outlined), label: 'Random'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.question_mark_outlined), label: 'Random'),
       ],
       currentIndex: widget.selectedIndex,
       selectedItemColor: Colors.deepPurpleAccent,
@@ -67,10 +69,9 @@ class _MainScreenState extends State<MainScreen> {
 
   // Liste des pages associées aux index
   final List<Widget> _pages = [
-    const HomePage(),
+    const Home(),
     const MoviesPage(),
-    const SwipePage(),
-    const RandomPage(),
+    const SwipeMovie(),
     const Recherche(),
   ];
 
@@ -87,9 +88,11 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.movie_creation_outlined), label: 'Movies'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.movie_creation_outlined), label: 'Movies'),
           BottomNavigationBarItem(icon: Icon(Icons.swipe), label: 'Swipe'),
-          BottomNavigationBarItem(icon: Icon(Icons.question_mark_outlined), label: 'Random'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.question_mark_outlined), label: 'Random'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Recherche'),
         ],
         currentIndex: _selectedIndex,

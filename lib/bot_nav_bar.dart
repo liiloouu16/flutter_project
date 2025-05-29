@@ -38,12 +38,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.food_bank),
-            label: 'Produits',
+            icon: Icon(Icons.screen_search_desktop_outlined),
+            label: 'Découvrir',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shop),
-            label: 'Courses',
+            icon: Icon(Icons.local_activity_outlined),
+            label: 'Mon activité',
           ),
         ],
       ),

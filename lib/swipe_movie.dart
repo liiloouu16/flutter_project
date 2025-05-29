@@ -183,23 +183,24 @@ class _SwipeMovieState extends State<SwipeMovie> {
         appBar: AppBar(
           title: Text("Trouve ton film ou ta série"),
           bottom: TabBar(
-            //onglet cliqué -> maj l'url
-            onTap: (index) {
-              updateUrl(index);
-            },
-            tabs: [
+            isScrollable: false,
+            onTap: (index) => updateUrl(index),
+            tabs: const [
               Tab(text: "Tout"),
-              Tab(text: "Au cinéma"),
-              Tab(text: "Mieux noté"),
-              Tab(text: "Série"),
+              Tab(text: "Cinéma"),
+              Tab(text: "Top"),
+              Tab(text: "Séries"),
             ],
           ),
+
         ),
         //contenu en dessous de l'onglet
         body: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.03,
+          ),
           child: TabBarView(
-            physics:
+          physics:
                 NeverScrollableScrollPhysics(), //enlève le défilement entre les tabs
             children: [
               buildMovieList(),
@@ -228,7 +229,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
               : Column(
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.65,
+                      height: MediaQuery.of(context).size.height * 0.6,
                       child: TinderSwapCard(
                         swipeUp: false,
                         swipeDown: false,
@@ -237,19 +238,29 @@ class _SwipeMovieState extends State<SwipeMovie> {
                         stackNum: 3,
                         swipeEdge: 3.0,
                         maxWidth: MediaQuery.of(context).size.width * 0.85,
-                        maxHeight: MediaQuery.of(context).size.height * 0.7,
+                        maxHeight: MediaQuery.of(context).size.height * 0.8,
                         minWidth: MediaQuery.of(context).size.width * 0.75,
-                        minHeight: MediaQuery.of(context).size.height * 0.6,
+                        minHeight: MediaQuery.of(context).size.height * 0.7,
                         cardBuilder: (context, index) => Card(
                           child: Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start, //aligner à gauche
                             children: [
                               Expanded(
-                                child: Image.network(
-                                  movieDetails[index]["image"]!,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity, //éviter bord blanc
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                  child: Container(
+                                    color: Colors.white38,
+                                    child: Image.network(
+                                      movieDetails[index]["image"]!,
+                                      fit: BoxFit.contain,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+
                                 ),
                               ),
                               //TITRE

@@ -164,7 +164,7 @@ class _ActivitePageState extends State<ActivitePage>
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xFF4A148C),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,

@@ -30,10 +30,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.purple,
-          unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey,
+        iconSize: 25,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

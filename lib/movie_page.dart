@@ -19,7 +19,7 @@ class MovieDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //IMAGE
+            // IMAGE
             Stack(
               children: [
                 Image.network(
@@ -47,9 +47,9 @@ class MovieDetailPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            //INFOS
+            // INFOS
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 0, 25, 50),
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 60),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,20 +65,21 @@ class MovieDetailPage extends StatelessWidget {
                   Text(
                     "Date de sortie : ${movie.releaseDate}",
                     style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16
+                      color: Colors.white70,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     "Durée : ${movie.runtime}",
                     style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16
+                      color: Colors.white70,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Synopsis
+
+                  // SYNOPSIS
                   const Text(
                     "Synopsis",
                     style: TextStyle(
@@ -92,9 +93,53 @@ class MovieDetailPage extends StatelessWidget {
                     movie.overview ?? "Synopsis non disponible.",
                     textAlign: TextAlign.justify,
                     style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
+                      color: Colors.white70,
+                      fontSize: 16,
                     ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  // BOUTONS
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          //TODO:ici à enregistrer dans la 3eme page
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Ajouté à 'Regardé'")),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        icon: const Icon(Icons.check,
+                        color: Colors.white,),
+                        label: const Text("Regardé",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          //TODO:ici à enregistrer dans la 3eme page
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Ajouté à 'À regarder'")),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                        ),
+                        icon: const Icon(Icons.watch_later_outlined,
+                          color: Colors.white,),
+                        label: const Text("À regarder",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

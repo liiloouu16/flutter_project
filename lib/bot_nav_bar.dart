@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'swipe_movie.dart';
-import 'affichageapi.dart';
+import 'activite.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -16,7 +16,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static final List<Widget> _pages = <Widget>[
     const Home(),
     const SwipeMovie(),
-    const Recherche()
+    ActivitePage()
   ];
 
   void _onItemTapped(int index) {
@@ -32,6 +32,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

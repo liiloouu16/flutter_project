@@ -259,7 +259,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
                         minWidth: MediaQuery.of(context).size.width * 0.75,
                         minHeight: MediaQuery.of(context).size.height * 0.7,
                         cardBuilder: (context, index) => Card(
-                          color: Colors.transparent,
+                          color: Colors.deepPurple.withAlpha(77),
                           child: Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start, //aligner à gauche

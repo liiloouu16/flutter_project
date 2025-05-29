@@ -9,19 +9,96 @@ class MovieDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(movie.title)),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(movie.imageUrl),
-            const SizedBox(height: 12),
-            Text("Date de sortie : ${movie.releaseDate}"),
-            Text("Durée : ${movie.runtime}"),
+            //IMAGE
+            Stack(
+              children: [
+                Image.network(
+                  movie.imageUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+                Positioned.fill(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black,
+                        ],
+                        stops: [0.7, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 20),
-            const Text("Synopsis :",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(movie.overview ?? "Synopsis non disponible."),
+
+            //INFOS
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 0, 25, 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Date de sortie : ${movie.releaseDate}",
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Durée : ${movie.runtime}",
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Synopsis
+                  const Text(
+                    "Synopsis",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    movie.overview ?? "Synopsis non disponible.",
+                    textAlign: TextAlign.justify,
+                    style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

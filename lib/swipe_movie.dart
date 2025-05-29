@@ -181,8 +181,19 @@ class _SwipeMovieState extends State<SwipeMovie> {
       length: 4, //nombre d'onglets
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Trouve ton film ou ta série"),
+          title: Text(
+            "Trouve ton film ou ta série",
+            style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          ),),
+          centerTitle: true,
+          backgroundColor: Color(0xFF4A148C),
+          elevation: 0,
           bottom: TabBar(
+            indicatorColor: Colors.pinkAccent,
+            labelColor: Colors.pinkAccent,
+            unselectedLabelColor: Colors.white,
             isScrollable: false,
             onTap: (index) => updateUrl(index),
             tabs: const [
@@ -192,16 +203,21 @@ class _SwipeMovieState extends State<SwipeMovie> {
               Tab(text: "Séries"),
             ],
           ),
-
         ),
         //contenu en dessous de l'onglet
-        body: Padding(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF9C27B0), Color(0xFF4A148C)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).size.height * 0.03,
           ),
           child: TabBarView(
-          physics:
-                NeverScrollableScrollPhysics(), //enlève le défilement entre les tabs
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               buildMovieList(),
               buildMovieList(),
@@ -210,6 +226,7 @@ class _SwipeMovieState extends State<SwipeMovie> {
             ],
           ),
         ),
+
       ),
     );
   }
@@ -242,10 +259,12 @@ class _SwipeMovieState extends State<SwipeMovie> {
                         minWidth: MediaQuery.of(context).size.width * 0.75,
                         minHeight: MediaQuery.of(context).size.height * 0.7,
                         cardBuilder: (context, index) => Card(
+                          color: Colors.transparent,
                           child: Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start, //aligner à gauche
                             children: [
+                              //IMAGE
                               Expanded(
                                 child: ClipRRect(
                                   borderRadius: const BorderRadius.only(
@@ -253,47 +272,62 @@ class _SwipeMovieState extends State<SwipeMovie> {
                                     topRight: Radius.circular(15),
                                   ),
                                   child: Container(
-                                    color: Colors.white38,
                                     child: Image.network(
                                       movieDetails[index]["image"]!,
                                       fit: BoxFit.contain,
                                       width: double.infinity,
                                     ),
                                   ),
-
                                 ),
                               ),
-                              //TITRE
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0, top: 7.0, bottom: 1),
-                                child: Text(
-                                  movieDetails[index]["title"] ??
-                                      "Titre inconnu",
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                              //BAS (INFOS)
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF4A148C),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //TITRE
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, top: 7.0, bottom: 1),
+                                      child: Text(
+                                        movieDetails[index]["title"] ??
+                                            "Titre inconnu",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    //DATE
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 15.0),
+                                      child: Text(
+                                        "Date de sortie : ${movieDetails[index]["release_date"] ?? "Date inconnue"}",
+                                        style: const TextStyle(
+                                            fontSize: 16, color: Color(0xFFCFCFCF)),
+                                      ),
+                                    ),
+                                    //DUREE
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, bottom: 7),
+                                      child: Text(
+                                        "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
+                                        style: const TextStyle(
+                                            fontSize: 16,  color: Color(0xFFCFCFCF)),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              //DATE
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(
-                                  "Date de sortie : ${movieDetails[index]["release_date"] ?? "Date inconnue"}",
-                                  style: const TextStyle(
-                                      fontSize: 16, color: Colors.grey),
-                                ),
-                              ),
-                              //DUREE
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0, bottom: 7),
-                                child: Text(
-                                  "Durée : ${movieDetails[index]["runtime"] ?? "Durée inconnue"}",
-                                  style: const TextStyle(
-                                      fontSize: 16, color: Colors.grey),
-                                ),
-                              )
                             ],
                           ),
                         ),

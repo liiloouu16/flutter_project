@@ -1,37 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/affichageapi.dart';
+import 'package:flutter_project/listeFilm.dart';
+import 'package:flutter_project/searchbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ConsumerWidget pour la page d'accueil
-class Home extends ConsumerWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<Home> {
+  final TextEditingController _searchController = TextEditingController();
+  String searchQuery = "";
+
+  void handleSearch(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: <Color>[Colors.deepPurpleAccent, Colors.purpleAccent],
-              ),
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: const Text(
+            "FILMANIA",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
             ),
           ),
-          centerTitle: true,
-          title: const Text('🎬Filmania',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 60,
-                fontWeight: FontWeight.bold,
-              )),
-          backgroundColor: Colors.purple[800],
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF4A148C),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: SearchBarWidget(
+            controller: _searchController,
+            onSearch: handleSearch,
+          ),
         ),
       ),
-      body: Column(
-        children: [Recherche()],
-      ),
+      body: ListFilm(query: searchQuery),
+      //backgroundColor: Colors.black87,
     );
   }
 }

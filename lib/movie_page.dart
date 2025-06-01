@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'movie.dart';
+import 'local_storage.dart';
 
 class MovieDetailPage extends StatelessWidget {
   final Movie movie;
@@ -104,36 +105,46 @@ class MovieDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () {
-                          //TODO:ici à enregistrer dans la 3eme page
+                        onPressed: () async {
+                          await LocalStorage.addMovie(
+                              movie, MovieCategory.watched);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Ajouté à 'Regardé'")),
+                            const SnackBar(
+                                content: Text("Ajouté à 'Regardé'")),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                         ),
-                        icon: const Icon(Icons.check,
-                        color: Colors.white,),
-                        label: const Text("Regardé",
+                        icon: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "Regardé",
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          //TODO:ici à enregistrer dans la 3eme page
+                        onPressed: () async {
+                          await LocalStorage.addMovie(
+                              movie, MovieCategory.watchLater);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Ajouté à 'À regarder'")),
+                            const SnackBar(
+                                content: Text("Ajouté à 'À regarder'")),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                         ),
-                        icon: const Icon(Icons.watch_later_outlined,
-                          color: Colors.white,),
-                        label: const Text("À regarder",
+                        icon: const Icon(
+                          Icons.watch_later_outlined,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "À regarder",
                           style: TextStyle(
                             color: Colors.white,
                           ),

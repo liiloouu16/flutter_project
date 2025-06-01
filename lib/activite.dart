@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'movie.dart';
+import 'local_storage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'appconst.dart';
+import 'movie_page.dart';
 
 class ActivitePage extends StatefulWidget {
   @override
@@ -9,55 +15,17 @@ class _ActivitePageState extends State<ActivitePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<Map<String, String>> likedMovies = [
-    {
-      'title': 'Inception',
-      'year': '2010',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg',
-    },
-    {
-      'title': 'Interstellar',
-      'year': '2014',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg',
-    },
-  ];
+  List<Movie> likedMovies = [];
+  List<Movie> watchLaterMovies = [];
+  List<Movie> watchedMovies = [];
 
-  final List<Map<String, String>> watchLaterMovies = [
-    {
-      'title': 'Dune',
-      'year': '2021',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg',
-    },
-    {
-      'title': 'The Batman',
-      'year': '2022',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg',
-    },
-  ];
-
-  final List<Map<String, String>> watchedMovies = [
-    {
-      'title': 'The Dark Knight',
-      'year': '2008',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
-    },
-    {
-      'title': 'Avengers: Endgame',
-      'year': '2019',
-      'poster':
-      'https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg',
-    },
-  ];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    loadMoviesFromStorage();
   }
 
   @override
@@ -66,7 +34,48 @@ class _ActivitePageState extends State<ActivitePage>
     super.dispose();
   }
 
-  Widget buildMovieList(List<Map<String, String>> movies) {
+  Future<Movie?> fetchMovieDetails(int id) async {
+    final apiKey = '${Appconst.apiKey}';  // Remplace par ta clé TMDB
+    final url =
+        'https://api.themoviedb.org/3/movie/$id?api_key=$apiKey&language=fr-FR';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return Movie.fromJson(data);
+    } else {
+      print("Erreur API film $id : ${response.statusCode}");
+      return null;
+    }
+  }
+
+  Future<void> loadMoviesFromStorage() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final likedList = await LocalStorage.getLikedMovies();
+    final watchLaterList = await LocalStorage.getWatchLaterMovies();
+    final watchedList = await LocalStorage.getWatchedMovies();
+
+    final likedFutures = likedList.map((json) => fetchMovieDetails(json['id'])).toList();
+    final watchLaterFutures = watchLaterList.map((json) => fetchMovieDetails(json['id'])).toList();
+    final watchedFutures = watchedList.map((json) => fetchMovieDetails(json['id'])).toList();
+
+    final likedResults = await Future.wait(likedFutures);
+    final watchLaterResults = await Future.wait(watchLaterFutures);
+    final watchedResults = await Future.wait(watchedFutures);
+
+    setState(() {
+      likedMovies = likedResults.whereType<Movie>().toList();
+      watchLaterMovies = watchLaterResults.whereType<Movie>().toList();
+      watchedMovies = watchedResults.whereType<Movie>().toList();
+      isLoading = false;
+    });
+  }
+
+  Widget buildMovieList(List<Movie> movies) {
     if (movies.isEmpty) {
       return Center(
         child: Text(
@@ -87,8 +96,7 @@ class _ActivitePageState extends State<ActivitePage>
         final movie = movies[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 8,
           shadowColor: Colors.black54,
           child: Container(
@@ -108,7 +116,7 @@ class _ActivitePageState extends State<ActivitePage>
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  movie['poster']!,
+                  movie.imageUrl,
                   width: 60,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
@@ -123,7 +131,7 @@ class _ActivitePageState extends State<ActivitePage>
                 ),
               ),
               title: Text(
-                movie['title']!,
+                movie.title,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -131,7 +139,7 @@ class _ActivitePageState extends State<ActivitePage>
                 ),
               ),
               subtitle: Text(
-                'Sorti en ${movie['year']}',
+                'Sorti en ${movie.releaseDate}',
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
@@ -143,7 +151,12 @@ class _ActivitePageState extends State<ActivitePage>
                 size: 28,
               ),
               onTap: () {
-                // TODO: Action quand on clique sur un film
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MovieDetailPage(movie: movie),
+                  ),
+                );
               },
             ),
           ),
@@ -158,13 +171,10 @@ class _ActivitePageState extends State<ActivitePage>
       appBar: AppBar(
         title: const Text(
           'Mon activité',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFF4A148C),
+        backgroundColor: const Color(0xFF4A148C),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
@@ -186,7 +196,9 @@ class _ActivitePageState extends State<ActivitePage>
             end: Alignment.bottomRight,
           ),
         ),
-        child: TabBarView(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
           controller: _tabController,
           children: [
             buildMovieList(likedMovies),
